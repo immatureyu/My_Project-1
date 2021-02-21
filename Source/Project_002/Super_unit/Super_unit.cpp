@@ -77,3 +77,28 @@ void ASuper_unit::distance_sort_unit_list(TArray<ASuper_unit*>& out_sorted_array
 
 	out_sorted_array = (unit_list);
 }
+
+FVector ASuper_unit::get_next_nav_point(ASuper_unit* target_enemy_unit, FVector target_location, bool is_target_unit)
+{
+	set_my_location();
+	const FVector location_now = my_location;
+	UNavigationPath* Navpath;
+
+	if (is_target_unit)
+	{
+		Navpath = UNavigationSystemV1::FindPathToActorSynchronously(this, my_location, target_enemy_unit);
+	}
+	else
+	{
+		Navpath = UNavigationSystemV1::FindPathToLocationSynchronously(this, my_location, target_location);
+	}
+
+	if (Navpath->PathPoints.Num() > 1)
+	{
+		return Navpath->PathPoints[1];
+	}
+	else
+	{
+		return my_location;
+	}
+}

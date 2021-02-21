@@ -6,6 +6,8 @@
 #include "GameFramework/Pawn.h"
 #include "Kismet\KismetArrayLibrary.h"
 #include "Kismet/KismetArrayLibrary.h"
+#include "NavigationSystem.h"
+#include "NavigationPath.h"
 #include "Super_unit.generated.h"
 
 UCLASS(Blueprintable, BlueprintType)
@@ -98,6 +100,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Unit_Information")
 		FVector now_speed_vector;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Unit_Information")
+		bool is_self_dead = false;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Components")
 		int unit_status_enum;//ground_helo_plane
 
@@ -133,4 +138,7 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "investigation_hide")
 		void distance_sort_unit_list(TArray<ASuper_unit*>& out_sorted_array, TArray<ASuper_unit*> unit_list, FVector self_location);
+
+	UFUNCTION(BlueprintPure, Category = "NavMesh")
+		FVector get_next_nav_point(ASuper_unit* target_enemy_unit, FVector target_location, bool is_target_unit);
 };

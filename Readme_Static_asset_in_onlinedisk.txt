@@ -1,0 +1,2 @@
+map_test_for_mbt_BuiltData.uasset	Project_002\Content\Class\Map_for_game
+NaturePackage	Project_002\Content

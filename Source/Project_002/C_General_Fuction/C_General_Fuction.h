@@ -186,6 +186,9 @@ public:
 		static void high_performance_turret_rotate_to_degrees(float& out_axis, bool& is_turret_rotate_rdy, FVector enemy_location, FVector my_location, float now_turret_degrees,
 			float pre_aim_turret_rotate);
 
+	UFUNCTION(BlueprintPure, Category = "Turret_Control")
+		static void high_performance_turret_rotate_only_degrees(float& out_axis, bool& is_rotate_over, float now_turret_rotate, float now_target_rotate);
+
 	UFUNCTION(BlueprintCallable, Category = "Barrel_Control")
 		static void high_performance_barrel_rotate_to_degrees(float& out_axis, bool& is_barrel_rotate_rdy, float pre_aim_turret_rotate, float now_barrel_degrees);
 
@@ -198,4 +201,8 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "Aim_Control")
 		static void barrel_pitch_cal(float& out_pitch, FVector enemy_adv_location, FVector my_location, float my_pitch, float bullet_speed, float TADV);
+
+	UFUNCTION(BlueprintCallable, Category = "Nav_ponit_to_move")
+		static void vehicle_nav_ponit_to_move(float& out_forward_move, float& out_right_move, float now_forward_move, float now_right_move,
+			FVector next_nav_point, FVector my_location, float my_rotate, float speed_multiplier, float delta_time);
 };

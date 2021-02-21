@@ -849,6 +849,28 @@ void UC_General_Fuction::high_performance_turret_rotate_to_degrees(float& out_ax
 	}
 }
 
+void UC_General_Fuction::high_performance_turret_rotate_only_degrees(float& out_axis, bool& is_rotate_over, float now_turret_rotate, float now_target_rotate)
+{
+	float tp_gap = now_target_rotate - now_turret_rotate;
+	if (UKismetMathLibrary::NearlyEqual_FloatFloat(tp_gap, 0, 0.1))
+	{
+		out_axis = 0;
+		is_rotate_over = true;
+		return;
+	}
+
+	if (abs(tp_gap) < 10)
+	{
+		out_axis = tp_gap / 16;
+	}
+	else
+	{
+		out_axis = tp_gap / abs(tp_gap);
+	}
+
+	is_rotate_over = false;
+}
+
 void UC_General_Fuction::high_performance_barrel_rotate_to_degrees(float& out_axis, bool& is_barrel_rotate_rdy, float pre_aim_turret_rotate, float now_barrel_degrees)
 {
 	float tp_will_rotate_pitch = pre_aim_turret_rotate - now_barrel_degrees;
@@ -906,11 +928,35 @@ void UC_General_Fuction::barrel_pitch_cal(float& out_pitch, FVector enemy_adv_lo
 	#define VECTOR2_DIS(a,b) (sqrt((a)*(a)+(b)*(b)))
 
 	float tp_adv_2d_distance = VECTOR2_DIS(VECTOR2_SUB(X), VECTOR2_SUB(Y));
-	UE_LOG(LogTemp, Log, TEXT("tp_adv_2d_distance %f"), tp_adv_2d_distance);
+	//UE_LOG(LogTemp, Log, TEXT("tp_adv_2d_distance %f"), tp_adv_2d_distance);
 	float location_pitch = acosf(tp_adv_2d_distance / (enemy_adv_location-my_location).Size());//radian
-	UE_LOG(LogTemp, Log, TEXT("location_pitch %f"), location_pitch);
-	UE_LOG(LogTemp, Log, TEXT("(enemy_adv_location-my_location).Size() %f"), (enemy_adv_location - my_location).Size());
-	UE_LOG(LogTemp, Log, TEXT("tp_adv_2d_distance %f"), tp_adv_2d_distance);
+	//UE_LOG(LogTemp, Log, TEXT("location_pitch %f"), location_pitch);
+	//UE_LOG(LogTemp, Log, TEXT("(enemy_adv_location-my_location).Size() %f"), (enemy_adv_location - my_location).Size());
+	//UE_LOG(LogTemp, Log, TEXT("tp_adv_2d_distance %f"), tp_adv_2d_distance);
 	out_pitch = FMath::RadiansToDegrees(asinf(cosf(location_pitch) * G * TADV / 2 / (bullet_speed * 100)) + location_pitch - my_pitch);
-	UE_LOG(LogTemp, Log, TEXT("out_pitch %f"), out_pitch);
+	//UE_LOG(LogTemp, Log, TEXT("out_pitch %f"), out_pitch);
+}
+
+void UC_General_Fuction::vehicle_nav_ponit_to_move(float& out_forward_move, float& out_right_move, float now_forward_move, float now_right_move,
+	FVector next_nav_point, FVector my_location, float my_rotate, float speed_multiplier, float delta_time)
+{
+	if (UKismetMathLibrary::EqualEqual_VectorVector(my_location, next_nav_point, 10))
+	{
+		out_forward_move = 0;
+		out_right_move = 0;
+		return;
+	}
+
+	FVector* normal_move_vector = new FVector(0);
+	*normal_move_vector = (next_nav_point - my_location);
+	normal_move_vector->Z = 0;
+	*normal_move_vector = (*normal_move_vector).GetSafeNormal();
+
+	float tp_angle = acosf(FVector::DotProduct(*normal_move_vector, FVector(1, 0, 0))) * (normal_move_vector->Y) / abs(normal_move_vector->Y);
+	UE_LOG(LogTemp, Log, TEXT("normal_move_vector_angle %f"), FMath::RadiansToDegrees(tp_angle));
+	tp_angle -= UKismetMathLibrary::DegreesToRadians(my_rotate);
+	UE_LOG(LogTemp, Log, TEXT("out_pitch %f"), FMath::RadiansToDegrees(tp_angle));
+
+	out_forward_move = UKismetMathLibrary::FInterpTo(now_forward_move, cosf(tp_angle) * speed_multiplier, delta_time, 1);
+	out_right_move = UKismetMathLibrary::FInterpTo(now_right_move, sinf(tp_angle) * speed_multiplier, delta_time, 1);
 }
