@@ -205,4 +205,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Nav_ponit_to_move")
 		static void vehicle_nav_ponit_to_move(float& out_forward_move, float& out_right_move, float now_forward_move, float now_right_move,
 			FVector next_nav_point, FVector my_location, float my_rotate, float speed_multiplier, float delta_time);
+
+	UFUNCTION(BlueprintPure, Category = "UI_color")
+		static void unit_in_map_icon_color_set(FLinearColor& out_Linear_color, int camp, int camp_and_friend_enum);
+
+	UFUNCTION(BlueprintPure, Category = "UI_Map")
+		static void worldlocation_to_map_location(FVector2D& out_unit_map_location, FVector unit_location, float map_size_x, float map_size_y, float map_ui_size);
+
 };

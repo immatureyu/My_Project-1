@@ -960,3 +960,43 @@ void UC_General_Fuction::vehicle_nav_ponit_to_move(float& out_forward_move, floa
 	out_forward_move = UKismetMathLibrary::FInterpTo(now_forward_move, cosf(tp_angle) * speed_multiplier, delta_time, 1);
 	out_right_move = UKismetMathLibrary::FInterpTo(now_right_move, sinf(tp_angle) * speed_multiplier, delta_time, 1);
 }
+
+void UC_General_Fuction::unit_in_map_icon_color_set(FLinearColor& out_Linear_color, int camp, int camp_and_friend_enum)
+{
+	if (camp == 0)
+	{
+		switch (camp_and_friend_enum)
+		{
+		case 0:
+			out_Linear_color = FLinearColor(15.0 / 256, 51.0 / 256, 234.0 / 256, 0.8);
+		case 1:
+			out_Linear_color = FLinearColor(15.0 / 256, 144.0 / 256, 234.0 / 256, 0.8);
+		case 2:
+			out_Linear_color = FLinearColor(223.0 / 256, 15.0 / 256, 15.0 / 256, 0.8);
+		}
+	}
+	else
+	{
+		switch (camp_and_friend_enum)
+		{
+		case 0:
+			out_Linear_color = FLinearColor(223.0 / 256, 15.0 / 256, 15.0 / 256, 0.8);
+		case 1:
+			out_Linear_color = FLinearColor(234.0 / 256, 77.0 / 256, 15.0 / 256, 0.8);
+		case 2:
+			out_Linear_color = FLinearColor(15.0 / 256, 51.0 / 256, 234.0 / 256, 0.8);
+		}
+	}
+}
+
+void UC_General_Fuction::worldlocation_to_map_location(FVector2D& out_unit_map_location, FVector unit_location, float map_size_x, float map_size_y, float map_ui_size)
+{
+	float tp_X_symbol = unit_location.X / abs(unit_location.X);
+	float tp_Y_symbol = unit_location.Y / abs(unit_location.Y);
+
+	FVector2D* tp_u_m_l = new FVector2D(0, 0);
+	tp_u_m_l->X = unit_location.X / map_size_x * map_ui_size + map_ui_size / 2;
+	tp_u_m_l->Y = unit_location.Y / map_size_y * map_ui_size + map_ui_size / 2;
+
+	out_unit_map_location = *tp_u_m_l;
+}
