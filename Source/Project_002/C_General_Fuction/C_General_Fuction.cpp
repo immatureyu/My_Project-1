@@ -991,12 +991,34 @@ void UC_General_Fuction::unit_in_map_icon_color_set(FLinearColor& out_Linear_col
 
 void UC_General_Fuction::worldlocation_to_map_location(FVector2D& out_unit_map_location, FVector unit_location, float map_size_x, float map_size_y, float map_ui_size)
 {
-	float tp_X_symbol = unit_location.X / abs(unit_location.X);
-	float tp_Y_symbol = unit_location.Y / abs(unit_location.Y);
-
 	FVector2D* tp_u_m_l = new FVector2D(0, 0);
 	tp_u_m_l->X = unit_location.X / map_size_x * map_ui_size + map_ui_size / 2;
 	tp_u_m_l->Y = unit_location.Y / map_size_y * map_ui_size + map_ui_size / 2;
 
 	out_unit_map_location = *tp_u_m_l;
+}
+
+void UC_General_Fuction::camera_height_switch_cal(float& out_height_switch, float& out_axis, float axis, float now_height, float lower_limit, float upper_limit,
+	float height_multiplier, float deltatime, float last_axis)
+{
+	float tp_axis = FMath::FInterpTo(last_axis, axis, deltatime, 10);
+
+	if (now_height + tp_axis * height_multiplier >= upper_limit)
+	{
+		tp_axis = FMath::FInterpTo(0, (upper_limit - now_height) / height_multiplier, deltatime, 1);
+	}
+	else if (now_height + tp_axis * height_multiplier <= lower_limit)
+	{
+		tp_axis = FMath::FInterpTo(0, (now_height - lower_limit) / height_multiplier, deltatime, 1);
+	}
+
+	out_height_switch = tp_axis * height_multiplier;
+	out_axis = tp_axis;
+}
+
+void UC_General_Fuction::camera_translation_switch_cal(float& out_translation_switch, float& out_axis, float axis, float now_height, float lower_limit, float upper_limit,
+	float translation_multiplier, float deltatime, float last_axis)
+{
+	out_translation_switch = axis * (FMath::LogX(10, now_height / 50000) + 1) * translation_multiplier;
+	out_axis = FMath::FInterpTo(last_axis, axis, deltatime, 5);
 }

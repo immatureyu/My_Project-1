@@ -212,4 +212,11 @@ public:
 	UFUNCTION(BlueprintPure, Category = "UI_Map")
 		static void worldlocation_to_map_location(FVector2D& out_unit_map_location, FVector unit_location, float map_size_x, float map_size_y, float map_ui_size);
 
+	UFUNCTION(BlueprintCallable, Category = "RTS_Camera")
+		static void camera_height_switch_cal(float& out_height_switch, float& out_axis, float axis, float now_height, float lower_limit, float upper_limit, 
+			float height_multiplier, float deltatime, float last_axis);
+
+	UFUNCTION(BlueprintCallable, Category = "RTS_Camera")
+		static void camera_translation_switch_cal(float& out_translation_switch, float& out_axis, float axis, float now_height, float lower_limit, float upper_limit,
+			float translation_multiplier, float deltatime, float last_axis);
 };

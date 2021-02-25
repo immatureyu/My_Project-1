@@ -17,6 +17,9 @@ class PROJECT_002_API ASuper_unit : public APawn
 
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Unit_Information")
+		int Player_ID;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Unit_Information")
 		FString unit_ID;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Unit_Information")
