@@ -219,4 +219,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "RTS_Camera")
 		static void camera_translation_switch_cal(float& out_translation_switch, float& out_axis, float axis, float now_height, float lower_limit, float upper_limit,
 			float translation_multiplier, float deltatime, float last_axis);
+
+	UFUNCTION(BlueprintPure, Category = "OOB_Code")
+		static void fstring_from_string_array(FString& out_fstring, TArray<FString> array_string);
+
+	UFUNCTION(BlueprintPure, Category = "OOB_Code")
+		static void OOB_code_row_parse(TArray<FString>& out_OOB_row_code, FString origin_OOB_code);
+
+	UFUNCTION(BlueprintPure, Category = "OOB_Code")
+		static void OOB_code_unit_parse(TArray<FString>& out_OOB_unit_ID, FString OOB_row_code);
+
+	UFUNCTION(BlueprintCallable, Category = "OOB_Code")
+		static void OOB_code_unit_origin_code_parse(FString& out_unit_id, int& out_unit_type, int& out_train_type, int& out_unit_num, FString unit_origin_code);
 };

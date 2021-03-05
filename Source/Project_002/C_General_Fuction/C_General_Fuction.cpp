@@ -1022,3 +1022,98 @@ void UC_General_Fuction::camera_translation_switch_cal(float& out_translation_sw
 	out_translation_switch = axis * (FMath::LogX(10, now_height / 50000) + 1) * translation_multiplier;
 	out_axis = FMath::FInterpTo(last_axis, axis, deltatime, 5);
 }
+
+void UC_General_Fuction::fstring_from_string_array(FString& out_fstring, TArray<FString> array_string)
+{
+	for (int i = 0; i < array_string.Num(); i++)
+	{
+		out_fstring.Append(array_string[i]);
+	}
+}
+
+void UC_General_Fuction::OOB_code_row_parse(TArray<FString>& out_OOB_row_code, FString origin_OOB_code)
+{
+	//not safe
+	TArray<FString> tp_list = UKismetStringLibrary::GetCharacterArrayFromString(origin_OOB_code);
+
+	int tp_index = 0;
+
+	for (int j = 0; j < 8; j++)
+	{
+		TArray<FString> tp_row_list;
+
+		for (int i = tp_index; i < tp_list.Num(); i++)
+		{
+			if(tp_list[i].Equals(FString(std::string(1,'#').c_str())))
+			{
+				tp_index = i + 1;
+				break;
+			}
+			else
+			{
+				tp_row_list.Add(tp_list[i]);
+			}
+		}
+
+		FString tp;
+		fstring_from_string_array(tp, tp_row_list);
+		out_OOB_row_code.Add(tp);
+	}
+}
+
+void UC_General_Fuction::OOB_code_unit_parse(TArray<FString>& out_OOB_unit_ID, FString OOB_row_code)
+{
+	TArray<FString> tp_list = UKismetStringLibrary::GetCharacterArrayFromString(OOB_row_code);
+	int tp_index = 0;
+
+	while (tp_index!=tp_list.Num())
+	{
+		TArray<FString> tp_unit_list;
+
+		for (int i = tp_index; i < tp_list.Num(); i++)
+		{
+			if (tp_list[i].Equals(FString(std::string(1, '/').c_str())))
+			{
+				tp_index = i + 1;
+				break;
+			}
+			else
+			{
+				tp_unit_list.Add(tp_list[i]);
+			}
+		}
+
+		FString tp;
+		fstring_from_string_array(tp, tp_unit_list);
+		out_OOB_unit_ID.Add(tp);
+	}
+}
+
+void UC_General_Fuction::OOB_code_unit_origin_code_parse(FString& out_unit_id, int& out_unit_type, int& out_train_type, int& out_unit_num, FString unit_origin_code)
+{
+	TArray<FString> tp_code = UKismetStringLibrary::GetCharacterArrayFromString(unit_origin_code);
+	TArray<FString> tp_list;
+	FString tp;
+
+	for (int i = 2; i < tp_code.Num(); i++)
+	{
+		tp_list.Add(tp_code[i]);
+
+		switch (i)
+		{
+		case 3:
+			fstring_from_string_array(tp, tp_list);
+			out_unit_type = FCString::Atoi(*(tp));
+			tp = FString();
+		case 8:
+			fstring_from_string_array(out_unit_id, tp_list);
+			tp_list.Empty();
+		case 9:
+			out_train_type = FCString::Atoi(*(tp_code[i]));
+			tp_list.Empty();
+		case 11:
+			fstring_from_string_array(tp, tp_list);
+			out_unit_num = FCString::Atoi(*(tp));
+		}
+	}
+}
