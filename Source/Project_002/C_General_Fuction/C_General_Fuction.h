@@ -231,4 +231,16 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "OOB_Code")
 		static void OOB_code_unit_origin_code_parse(FString& out_unit_id, int& out_unit_type, int& out_train_type, int& out_unit_num, FString unit_origin_code);
+
+	UFUNCTION(BlueprintPure, Category = "OOB_Code")
+		static void OOB_code_unit_imformation_write_to_unit_code(FString& out_unit_code, int unit_OOB_type, int unit_index_in_type, FString unit_id, int unit_train_type, int unit_num);
+
+	UFUNCTION(BlueprintPure, Category = "OOB_Code")
+		static void OOB_code_unit_code_write_to_row_code(FString& out_row_code, TArray<FString> unit_code);
+
+	UFUNCTION(BlueprintPure, Category = "OOB_Code")
+		static void OOB_code_row_code_write_to_OOB_code(FString& out_OOB_code, TArray<FString> row_code);
+
+	UFUNCTION(BlueprintPure, Category = "OOB_Code")
+		static void OOB_code_GameInstance_parse(FString& out_GameIstance_OOB_code_for_game, FString origin_OOB_code_from_UI);
 };

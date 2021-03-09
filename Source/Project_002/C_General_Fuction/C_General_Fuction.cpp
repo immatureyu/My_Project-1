@@ -908,9 +908,9 @@ void UC_General_Fuction::auto_advance_cal_after_rotate(float& turret_advance_rot
 void UC_General_Fuction::time_advance_cal(float& tadv, float distance, FVector enemy_speed, int bullet_speed)
 {
 	float enemy_speed_num = enemy_speed.Size();
-	#define G 980
-	#define BULLET_SPEED_CM (bullet_speed*100)
-	#define VA_VB (enemy_speed_num-BULLET_SPEED_CM)
+#define G 980
+#define BULLET_SPEED_CM (bullet_speed*100)
+#define VA_VB (enemy_speed_num-BULLET_SPEED_CM)
 	/*
 	#define TADV_CAL(va,vb,s) \
 		VAR_VALID \
@@ -923,13 +923,13 @@ void UC_General_Fuction::time_advance_cal(float& tadv, float distance, FVector e
 
 void UC_General_Fuction::barrel_pitch_cal(float& out_pitch, FVector enemy_adv_location, FVector my_location, float my_pitch, float bullet_speed, float TADV)
 {
-	#define G 980
-	#define VECTOR2_SUB(a) (enemy_adv_location.a-my_location.a)
-	#define VECTOR2_DIS(a,b) (sqrt((a)*(a)+(b)*(b)))
+#define G 980
+#define VECTOR2_SUB(a) (enemy_adv_location.a-my_location.a)
+#define VECTOR2_DIS(a,b) (sqrt((a)*(a)+(b)*(b)))
 
 	float tp_adv_2d_distance = VECTOR2_DIS(VECTOR2_SUB(X), VECTOR2_SUB(Y));
 	//UE_LOG(LogTemp, Log, TEXT("tp_adv_2d_distance %f"), tp_adv_2d_distance);
-	float location_pitch = acosf(tp_adv_2d_distance / (enemy_adv_location-my_location).Size());//radian
+	float location_pitch = acosf(tp_adv_2d_distance / (enemy_adv_location - my_location).Size());//radian
 	//UE_LOG(LogTemp, Log, TEXT("location_pitch %f"), location_pitch);
 	//UE_LOG(LogTemp, Log, TEXT("(enemy_adv_location-my_location).Size() %f"), (enemy_adv_location - my_location).Size());
 	//UE_LOG(LogTemp, Log, TEXT("tp_adv_2d_distance %f"), tp_adv_2d_distance);
@@ -969,10 +969,13 @@ void UC_General_Fuction::unit_in_map_icon_color_set(FLinearColor& out_Linear_col
 		{
 		case 0:
 			out_Linear_color = FLinearColor(15.0 / 256, 51.0 / 256, 234.0 / 256, 0.8);
+			break;
 		case 1:
 			out_Linear_color = FLinearColor(15.0 / 256, 144.0 / 256, 234.0 / 256, 0.8);
+			break;
 		case 2:
 			out_Linear_color = FLinearColor(223.0 / 256, 15.0 / 256, 15.0 / 256, 0.8);
+			break;
 		}
 	}
 	else
@@ -981,10 +984,13 @@ void UC_General_Fuction::unit_in_map_icon_color_set(FLinearColor& out_Linear_col
 		{
 		case 0:
 			out_Linear_color = FLinearColor(223.0 / 256, 15.0 / 256, 15.0 / 256, 0.8);
+			break;
 		case 1:
 			out_Linear_color = FLinearColor(234.0 / 256, 77.0 / 256, 15.0 / 256, 0.8);
+			break;
 		case 2:
 			out_Linear_color = FLinearColor(15.0 / 256, 51.0 / 256, 234.0 / 256, 0.8);
+			break;
 		}
 	}
 }
@@ -1025,10 +1031,13 @@ void UC_General_Fuction::camera_translation_switch_cal(float& out_translation_sw
 
 void UC_General_Fuction::fstring_from_string_array(FString& out_fstring, TArray<FString> array_string)
 {
+	FString tp;
 	for (int i = 0; i < array_string.Num(); i++)
 	{
-		out_fstring.Append(array_string[i]);
+		tp.Append(array_string[i]);
 	}
+
+	out_fstring = tp;
 }
 
 void UC_General_Fuction::OOB_code_row_parse(TArray<FString>& out_OOB_row_code, FString origin_OOB_code)
@@ -1038,13 +1047,13 @@ void UC_General_Fuction::OOB_code_row_parse(TArray<FString>& out_OOB_row_code, F
 
 	int tp_index = 0;
 
-	for (int j = 0; j < 8; j++)
+	for (int j = 0; j < 9; j++)
 	{
 		TArray<FString> tp_row_list;
 
 		for (int i = tp_index; i < tp_list.Num(); i++)
 		{
-			if(tp_list[i].Equals(FString(std::string(1,'#').c_str())))
+			if (tp_list[i].Equals(FString(std::string(1, '#').c_str())))
 			{
 				tp_index = i + 1;
 				break;
@@ -1066,7 +1075,7 @@ void UC_General_Fuction::OOB_code_unit_parse(TArray<FString>& out_OOB_unit_ID, F
 	TArray<FString> tp_list = UKismetStringLibrary::GetCharacterArrayFromString(OOB_row_code);
 	int tp_index = 0;
 
-	while (tp_index!=tp_list.Num())
+	while (tp_index != tp_list.Num())
 	{
 		TArray<FString> tp_unit_list;
 
@@ -1105,15 +1114,150 @@ void UC_General_Fuction::OOB_code_unit_origin_code_parse(FString& out_unit_id, i
 			fstring_from_string_array(tp, tp_list);
 			out_unit_type = FCString::Atoi(*(tp));
 			tp = FString();
+			break;
 		case 8:
 			fstring_from_string_array(out_unit_id, tp_list);
 			tp_list.Empty();
+			break;
 		case 9:
 			out_train_type = FCString::Atoi(*(tp_code[i]));
 			tp_list.Empty();
+			break;
 		case 11:
 			fstring_from_string_array(tp, tp_list);
 			out_unit_num = FCString::Atoi(*(tp));
+			break;
 		}
 	}
+}
+
+void UC_General_Fuction::OOB_code_unit_imformation_write_to_unit_code(FString& out_unit_code, int unit_OOB_type, int unit_index_in_type, FString unit_id, int unit_train_type, int unit_num)
+{
+	FString tp;
+	tp.Append(FString::FromInt(unit_OOB_type));
+	tp.Append(FString::FromInt(unit_index_in_type));
+	tp.Append(unit_id);
+	tp.Append(FString::FromInt(unit_train_type));
+	if (unit_num >= 10)
+	{
+		tp.Append(FString::FromInt(unit_num));
+	}
+	else
+	{
+		tp.Append(FString::FromInt(0));
+		tp.Append(FString::FromInt(unit_num));
+	}
+
+	out_unit_code = tp;
+}
+
+void UC_General_Fuction::OOB_code_unit_code_write_to_row_code(FString& out_row_code, TArray<FString> unit_code)
+{
+	TArray<FString> tp_add;
+	for (int i = 0; i < unit_code.Num(); i++)
+	{
+		tp_add.Add(unit_code[i]);
+		tp_add.Add(FString(std::string(1, '/').c_str()));
+	}
+
+	fstring_from_string_array(out_row_code, tp_add);
+}
+
+void UC_General_Fuction::OOB_code_row_code_write_to_OOB_code(FString& out_OOB_code, TArray<FString> row_code)
+{
+	TArray<FString> tp_add;
+	for (int i = 0; i < 9; i++)
+	{
+		if ((row_code[i]).Len() != 0)
+		{
+			tp_add.Add(row_code[i]);
+		}
+
+		tp_add.Add(FString(std::string(1, '#').c_str()));
+	}
+
+	fstring_from_string_array(out_OOB_code, tp_add);
+}
+
+void UC_General_Fuction::OOB_code_GameInstance_parse(FString& out_GameIstance_OOB_code_for_game, FString origin_OOB_code_from_UI)
+{
+	#define INIT_INT_TARRAY(list) list.Init(0, tp_len);
+	#define INIT_BOOL_POINT_LIST(list) \
+	for(int tp_safe_index_000000=0;tp_safe_index_000000<tp_len;tp_safe_index_000000++) { list[tp_safe_index_000000]=false; }
+
+	TArray<FString> tp_code_list_by_unit_type;
+	OOB_code_row_parse(tp_code_list_by_unit_type, origin_OOB_code_from_UI);
+
+	TArray<FString> tp_OOB_code_by_unit_type;
+	for (int i = 0; i < 9; i++)
+	{
+		FString tp_row_code;
+		if (tp_code_list_by_unit_type[i].Len() != 0)
+		{
+			TArray<FString> tp_unit_list;
+			OOB_code_unit_parse(tp_unit_list, tp_code_list_by_unit_type[i]);
+			int tp_len = tp_unit_list.Num();
+
+			TArray<FString> unit_id_list;
+			unit_id_list.Init(FString::FromInt(0), tp_len);
+			TArray<int> unit_train_type_list;
+			INIT_INT_TARRAY(unit_train_type_list);
+			TArray<int> unit_num_list;
+			INIT_INT_TARRAY(unit_num_list);
+			int tp_del;
+			bool* tp_delet_unit_index = new bool[tp_len];
+			INIT_BOOL_POINT_LIST(tp_delet_unit_index);
+
+			for (int j = 0; j < tp_unit_list.Num(); j++)
+			{
+				OOB_code_unit_origin_code_parse(unit_id_list[j], tp_del, unit_train_type_list[j], unit_num_list[j], tp_unit_list[j]);
+			}
+
+			for (int k = 0; k < tp_unit_list.Num(); k++)
+			{
+				if (tp_delet_unit_index[k])
+				{
+					continue;
+				}
+
+				for (int m = k + 1; m < tp_unit_list.Num(); m++)
+				{
+					if (tp_delet_unit_index[m])
+					{
+						continue;
+					}
+
+					bool check = unit_id_list[k].Equals(unit_id_list[m]) && unit_train_type_list[k] == unit_train_type_list[m];
+					if (check)
+					{
+						unit_num_list[k] += unit_num_list[m];
+						unit_num_list[m] = 0;
+						tp_delet_unit_index[m] = true;
+					}
+				}
+			}
+
+			for (int n = tp_len - 1; n >= 0; n--)
+			{
+				if (tp_delet_unit_index[n])
+				{
+					unit_id_list.RemoveAt(n);
+					unit_train_type_list.RemoveAt(n);
+					unit_num_list.RemoveAt(n);
+				}
+			}
+
+			TArray<FString> tp_unit_code;
+			for (int h = 0; h < unit_id_list.Num(); h++)
+			{
+				FString tp_code;
+				OOB_code_unit_imformation_write_to_unit_code(tp_code, i, h, unit_id_list[h], unit_train_type_list[h], unit_num_list[h]);
+				tp_unit_code.Add(tp_code);
+			}
+			OOB_code_unit_code_write_to_row_code(tp_row_code, tp_unit_code);
+		}
+		tp_OOB_code_by_unit_type.Add(tp_row_code);
+	}
+
+	OOB_code_row_code_write_to_OOB_code(out_GameIstance_OOB_code_for_game, tp_OOB_code_by_unit_type);
 }
